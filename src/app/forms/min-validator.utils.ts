@@ -1,6 +1,6 @@
 import { AbstractControl, FormControl } from '@angular/forms';
 
-export function hasControlMinValidator(control: AbstractControl): boolean {
+export function hasMinValueValidator(control: AbstractControl): boolean {
   const validator = control.validator;
 
   if (validator === null) {
@@ -11,18 +11,15 @@ export function hasControlMinValidator(control: AbstractControl): boolean {
   return 'min' in errors;
 }
 
-export function getMinValue(control: AbstractControl, fallback: number): number;
-export function getMinValue(control: AbstractControl): number | undefined;
-export function getMinValue(
-  control: AbstractControl,
-  fallback?: number
-): number | undefined {
+export function getMinValueFromValidator(control: AbstractControl, fallback: number): number;
+export function getMinValueFromValidator(control: AbstractControl): number | undefined;
+export function getMinValueFromValidator(control: AbstractControl, fallback?: number): number | undefined {
   const validator = control.validator;
 
   if (validator === null) {
     return fallback;
   }
 
-  const errors = validator(new FormControl(-Infinity)) ?? {};
-  return 'min' in errors ? errors['min']['min'] : fallback;
+  const errors = validator(new FormControl(-Infinity));
+  return errors?.['min']['min'] ?? fallback;
 }

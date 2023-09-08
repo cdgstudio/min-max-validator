@@ -1,6 +1,6 @@
 import { AbstractControl, FormControl } from '@angular/forms';
 
-export function hasControlMaxValidator(control: AbstractControl): boolean {
+export function hasMaxValueValidator(control: AbstractControl): boolean {
   const validator = control.validator;
 
   if (validator === null) {
@@ -11,18 +11,15 @@ export function hasControlMaxValidator(control: AbstractControl): boolean {
   return 'max' in errors;
 }
 
-export function getMaxValue(control: AbstractControl, fallback: number): number;
-export function getMaxValue(control: AbstractControl): number | undefined;
-export function getMaxValue(
-  control: AbstractControl,
-  fallback?: number
-): number | undefined {
-  const validator = control.validator;
+export function getMaxValueFromValidator(control: AbstractControl, fallback: number): number;
+export function getMaxValueFromValidator(control: AbstractControl): number | undefined;
+export function getMaxValueFromValidator(control: AbstractControl, fallback?: number): number | undefined {
+  const validatorFn = control.validator;
 
-  if (validator === null) {
+  if (validatorFn === null) {
     return fallback;
   }
 
-  const errors = validator(new FormControl(Infinity)) ?? {};
-  return 'max' in errors ? errors['max']['max'] : fallback;
+  const errors = validatorFn(new FormControl(Infinity));
+  return errors?.['max']['max'] ?? fallback;
 }
