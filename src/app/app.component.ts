@@ -31,12 +31,14 @@ import { NgIf } from '@angular/common';
           formControlName="age"
           autocomplete="off"
           placeholder="Provide age"
+          [min]="form.controls.age | minValue"
         />
-        <label *ngIf="form.controls.age.hasError('min')" for="age" class="text-red-600 mt-2 text-sm">
+        <label
+          for="age"
+          class="mt-2 block text-end text-xs text-gray-500 text-end;"
+          [class.text-red-600]="form.controls.age.hasError('min')"
+        >
           You have to be older than {{ form.controls.age | minValue }}
-        </label>
-        <label *ngIf="form.controls.age.hasError('max')" for="age" class="text-red-600 mt-2 text-sm">
-          People do not life so long
         </label>
       </div>
     </form>
@@ -66,7 +68,7 @@ export class AppComponent {
     }),
     age: new FormControl<number>(null!, {
       nonNullable: true,
-      validators: [Validators.required, Validators.min(18), Validators.max(100)],
+      validators: [Validators.required, Validators.min(18)],
     }),
   });
 }
